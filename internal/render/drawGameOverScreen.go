@@ -1,14 +1,23 @@
 package render
 
-import "snake-game/internal/game"
+import (
+	"snake-game/internal/game"
+)
 
 func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
-	const message = "Game Over!"
+	message := "Game Over!"
 
-	W := state.Config.Width
-	if W < len(message) {
-		return false
+	scoreToWin := state.Config.Width*state.Config.Heigth - state.Config.InitSnakeLength
+
+	if state.Score >= scoreToWin {
+		message = "You Win!"
 	}
+
+	return drawCenterMessage(message, screen, state)
+}
+
+func drawCenterMessage(message string, screen *[][]string, state game.GameState) bool {
+	W := state.Config.Width
 
 	backgroundLenth := len(state.Config.Textures.Background)
 
@@ -16,6 +25,7 @@ func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
 	centerWidth := W / 2
 
 	indexStart := centerWidth - halfMessageLen
+	indexStart = max(0, indexStart)
 
 	H := state.Config.Heigth
 	centerHeigth := H / 2

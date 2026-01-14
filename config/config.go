@@ -2,7 +2,7 @@ package config
 
 type GameConfig struct {
 	Width           int `json:"width"`
-	Heigth          int `json:"heigth"`
+	Heigth          int `json:"height"`
 	Delay           int `json:"delay"` // in milliseconds
 	InitSnakeLength int `json:"initSnakeLenth"`
 	Textures        struct {

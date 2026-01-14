@@ -7,8 +7,8 @@ import (
 func drawPixel(screen *[][]string, x, y int, texture string) bool {
 
 	if x < -1 || y < -1 ||
-		y+1 > len((*screen)) ||
-		x+1 > len((*screen)[0]) {
+		y+1 >= len((*screen)) ||
+		x+1 >= len((*screen)[y+1]) {
 		return false
 	}
 
@@ -34,10 +34,15 @@ func randomizeTexture(texture string) (string, bool) {
 }
 
 func drawText(screen *[][]string, message string, WStart, H int) bool {
+	// debug_tools.AddToLog(fmt.Sprint(WStart, " | ", H))
 	texture := ""
 	CurrCellInc := 0
-	for i, let := range message {
+	for _, let := range message {
+		// debug_tools.AddToLog(fmt.Sprint(WStart+CurrCellInc, " | ", len((*screen)[H+1])))
 		if let == '\n' {
+			if let != '\n' {
+				texture += string(let)
+			}
 			if texture != "" {
 				if !drawPixel(screen, WStart+CurrCellInc, H, texture) {
 					return false
@@ -49,7 +54,12 @@ func drawText(screen *[][]string, message string, WStart, H int) bool {
 			continue
 		}
 
-		cellLen := len((*screen)[H+1][i+1])
+		if WStart+CurrCellInc+1 >= len((*screen)[H+1]) {
+			continue
+		}
+
+		//debug_tools.AddToLog(H)
+		cellLen := len((*screen)[H+1][WStart+CurrCellInc+1])
 
 		texture += string(let)
 		if len(texture) < cellLen {
@@ -61,6 +71,12 @@ func drawText(screen *[][]string, message string, WStart, H int) bool {
 		}
 		CurrCellInc++
 		texture = ""
+	}
+
+	if texture != "" {
+		if !drawPixel(screen, WStart+CurrCellInc, H, texture) {
+			return false
+		}
 	}
 	return true
 }
