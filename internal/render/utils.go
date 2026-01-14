@@ -6,13 +6,13 @@ import (
 
 func drawPixel(screen *[][]string, x, y int, texture string) bool {
 
-	if x < -1 || y < -1 ||
-		y+1 >= len((*screen)) ||
-		x+1 >= len((*screen)[y+1]) {
+	if x < -1 || y < -2 ||
+		y+2 >= len((*screen)) ||
+		x+1 >= len((*screen)[y+2]) {
 		return false
 	}
 
-	(*screen)[y+1][x+1] = texture
+	(*screen)[y+2][x+1] = texture
 	return true
 }
 
@@ -54,12 +54,12 @@ func drawText(screen *[][]string, message string, WStart, H int) bool {
 			continue
 		}
 
-		if WStart+CurrCellInc+1 >= len((*screen)[H+1]) {
+		if WStart+CurrCellInc+1 >= len((*screen)[H+2]) {
 			continue
 		}
 
 		//debug_tools.AddToLog(H)
-		cellLen := len((*screen)[H+1][WStart+CurrCellInc+1])
+		cellLen := len((*screen)[H+2][WStart+CurrCellInc+1])
 
 		texture += string(let)
 		if len(texture) < cellLen {

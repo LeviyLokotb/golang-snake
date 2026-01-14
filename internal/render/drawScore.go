@@ -15,5 +15,5 @@ func drawScore(screen *[][]string, state game.GameState) bool {
 
 	text := "Score: " + score + " " + foodTexture
 
-	return drawText(screen, text, -1, -1)
+	return drawText(screen, text, -1, -2)
 }
