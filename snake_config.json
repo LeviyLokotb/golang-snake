@@ -1,0 +1,21 @@
+{
+    "width": 30,
+    "height": 20,
+    "delay": 200,
+    "initSnakeLength": 3,
+    "textures": {
+        "snakeHead": "✬",
+        "snakeBody": "❈❄",
+        "snakeTail": ".",
+        "food": "✦✶",
+        "border": "▩▨▧",
+        "background": " "
+    },
+    "colors": {
+        "snakeHead": "RED",
+        "snakeBody": "GREEN",
+        "snakeTail": "YELLOW",
+        "food": "CYAN",
+        "border": "BOLD+MAGENTA"
+    }
+}
