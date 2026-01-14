@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"snake-game/config"
 	"snake-game/internal/game"
 	"snake-game/internal/input"
@@ -16,17 +15,18 @@ func main() {
 	debug_tools.ClearLog()
 
 	// Флаги
-	config_name := flag.String("config", "snake_config.json", "Game config file (json)")
+	homeDir, _ := debug_tools.GetHomeDir()
+	config_name := flag.String("config", homeDir+"/"+".config/snake-go/config", "Game config file (json)")
 	flag.Parse()
 
 	// Загрузка захардкоженного конфига по умолчанию
 	// config := config.NewDefaultConfig()
 
 	// Загрузка конфига из json
-	config, err := config.LoadConfigFromJSON(*config_name)
+	conf, err := config.LoadConfigFromJSON(*config_name)
 	if err != nil {
-		fmt.Println("Error while loading config")
-		panic(err)
+		debug_tools.AddToLog("Error while loading config")
+		conf = config.NewDefaultConfig()
 	}
 
 	// Объект, отвечающий за контроль терминала
@@ -37,7 +37,7 @@ func main() {
 	ih := input.NewInputHandler(term)
 
 	// Запуск
-	game, err := game.StartGame(*config, renderer, ih)
+	game, err := game.StartGame(*conf, renderer, ih)
 	if err != nil {
 		panic(err)
 	}
