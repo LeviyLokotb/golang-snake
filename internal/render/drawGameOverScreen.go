@@ -10,7 +10,9 @@ func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
 		return false
 	}
 
-	halfMessageLen := len(message) / 2
+	backgroundLenth := len(state.Config.Textures.Background)
+
+	halfMessageLen := len(message) / (backgroundLenth * 2)
 	centerWidth := W / 2
 
 	indexStart := centerWidth - halfMessageLen
@@ -18,15 +20,5 @@ func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
 	H := state.Config.Heigth
 	centerHeigth := H / 2
 
-	for i := range message {
-		let := string(message[i])
-		for len(let) < len(state.Config.Textures.Background) {
-			let += " "
-		}
-		if !drawPixel(screen, indexStart+i, centerHeigth, let) {
-			return false
-		}
-	}
-
-	return true
+	return drawText(screen, message, indexStart, centerHeigth)
 }
