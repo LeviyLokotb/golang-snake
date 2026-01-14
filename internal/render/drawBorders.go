@@ -12,11 +12,11 @@ func drawBorders(screen *[][]string, state game.GameState) bool {
 	var plan []models.Point
 
 	for i := -1; i <= W; i++ {
-		plan = append(plan, models.Point{X: i, Y: -1})
+		plan = append(plan, models.Point{X: i, Y: 0})
 		plan = append(plan, models.Point{X: i, Y: H})
 	}
 
-	for j := -1; j <= H; j++ {
+	for j := 0; j <= H; j++ {
 		plan = append(plan, models.Point{X: -1, Y: j})
 		plan = append(plan, models.Point{X: W, Y: j})
 	}

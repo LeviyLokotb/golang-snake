@@ -21,7 +21,8 @@ func NewTerminalRenderer(t *terminal.Terminal) *TerminalRenderer {
 func (tr TerminalRenderer) RenderGame(state game.GameState) error {
 	terminal.HideCursor()
 
-	w, h := state.Config.Width+2, state.Config.Heigth+2
+	// +2 для границ, ещё +1 в высоту для счёта
+	w, h := state.Config.Width+2, state.Config.Heigth+3
 
 	screen := make([][]string, h)
 	for i := range screen {
@@ -33,6 +34,10 @@ func (tr TerminalRenderer) RenderGame(state game.GameState) error {
 
 	if !drawBorders(&screen, state) {
 		return errors.New("Rendering borders error")
+	}
+
+	if !drawScore(&screen, state) {
+		return errors.New("Rendering score error")
 	}
 
 	if state.GameOver {
