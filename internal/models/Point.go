@@ -89,6 +89,6 @@ func (p1 Point) GetDirectionIndex(p2 Point) (int, error) {
 	return 0, errors.New("Points not neardy")
 }
 
-func (p1 Point) IsEqual(p2 Point) bool {
+func (p1 Point) Equal(p2 Point) bool {
 	return (p1.X == p2.X) && (p1.Y == p2.Y)
 }

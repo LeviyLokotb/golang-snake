@@ -11,30 +11,25 @@ func UpdateGame(state *GameState) error {
 		return nil
 	}
 
-	oldSnake := state.Snake
-	oldFood := state.Food
+	snake := state.Snake
+	food := state.Food
 	score := state.Score
 	config := state.Config
 
-	newSnake, gameOverBySnake := nextSnake(oldSnake, oldFood, config)
+	isFoodEaten, gameOverBySnake := updateSnake(snake, *food, config)
 
-	newFood := oldFood
-	if newSnake.Lenth > oldSnake.Lenth {
+	if isFoodEaten {
 		score += 1
-		var errFood error
-		newFood, errFood = spawnNewFood(oldFood, newSnake, config)
+
+		errFood := spawnNewFood(food, *snake, config)
 		if errFood != nil {
 			return errFood
 		}
 	}
 
-	*state = GameState{
-		Snake:    newSnake,
-		Food:     newFood,
-		Score:    score,
-		GameOver: gameOverBySnake,
-		Config:   config,
-	}
+	state.Score = score
+	state.GameOver = gameOverBySnake
+
 	return nil
 }
 
@@ -42,43 +37,24 @@ func isPointOutOfBorder(p models.Point, config config.GameConfig) bool {
 	return !p.IsCorrect(0, config.Width, 0, config.Heigth)
 }
 
-func nextSnake(oldSnake *models.Snake, oldFood *models.Food, config config.GameConfig) (newSnake *models.Snake, gameOver bool) {
-	if isPointOutOfBorder(oldSnake.NextPoint, config) || oldSnake.IsUroboros() {
-		return oldSnake, true
+func updateSnake(snake *models.Snake, food models.Food, config config.GameConfig) (isFoodEaten, gameOver bool) {
+	if isPointOutOfBorder(snake.NextPoint, config) || snake.IsUroboros() {
+		return false, true
 	}
 
-	newBody := []models.Point{oldSnake.NextPoint}
-	newBody = append(newBody, oldSnake.Body...)
-	newLenth := oldSnake.Lenth + 1
+	isFoodEaten = snake.NextPoint.Equal(food.Position)
 
-	if !newBody[0].IsEqual(oldFood.Position) {
-		newLenth -= 1
-		newBody = newBody[:len(newBody)-1]
-	}
+	snake.Move(isFoodEaten)
 
-	direction, errDirection := newBody[1].GetDirectionIndex(newBody[0])
-	if errDirection != nil {
-		direction = 0
-	}
-
-	newNextPoint := newBody[0].ByIntDirectionPoint(direction)
-
-	newSnake = &models.Snake{
-		Body:      newBody,
-		NextPoint: newNextPoint,
-		Lenth:     newLenth,
-	}
-	return newSnake, false
+	return isFoodEaten, false
 }
 
-func spawnNewFood(oldFood *models.Food, snake *models.Snake, config config.GameConfig) (*models.Food, error) {
-	food, err := SpawnFood(config, snake.Body)
-
-	for food.Position.IsEqual(oldFood.Position) {
-		food, err = SpawnFood(config, snake.Body)
-		if err != nil {
-			return nil, err
-		}
+func spawnNewFood(food *models.Food, snake models.Snake, config config.GameConfig) error {
+	newFood, err := SpawnFood(config, snake.Body)
+	if err != nil {
+		return err
 	}
-	return &food, err
+
+	*food = newFood
+	return nil
 }

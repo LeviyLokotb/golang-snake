@@ -74,20 +74,23 @@ func SpawnFood(config config.GameConfig, snakeBody []models.Point) (models.Food,
 	W, H := config.Width, config.Heigth
 
 	var food models.Food
+
+FoodSpawning:
 	for count := 0; ; count++ {
 		if count > 2*W*H {
 			return models.Food{}, errors.New("Cannot create food")
 		}
 
 		food = models.Food{
-			Position: NewRandomPoint(1, W-1, 1, H-1),
+			Position: NewRandomPoint(0, W, 0, H),
 		}
 
 		for _, p := range snakeBody {
-			if food.Position.IsEqual(p) {
-				continue
+			if food.Position.Equal(p) {
+				continue FoodSpawning
 			}
 		}
+
 		break
 	}
 
