@@ -48,11 +48,36 @@ func (ih *InputHandler) Start() {
 				if err != nil {
 					continue
 				}
+
+				// Обработка escape-последовательностей
+				if char == '\033' {
+					nextChar, _, err := reader.ReadRune()
+					if nextChar != '[' || err != nil {
+						continue
+					}
+
+					escapeChar, _, err := reader.ReadRune()
+					if err != nil {
+						continue
+					}
+
+					switch escapeChar {
+					case 'A':
+						char = 'w'
+					case 'B':
+						char = 's'
+					case 'C':
+						char = 'd'
+					case 'D':
+						char = 'a'
+					}
+				}
+
 				switch unicode.ToLower(char) {
 				case 'q', 'й', '`', 'ё':
 					ih.Stop()
 					return
-				case 'r', 'к':
+				case 'r', 'к', '\r':
 					select {
 					case ih.restart <- true:
 					default:

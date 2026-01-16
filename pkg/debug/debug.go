@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func AddToLog(message any) {
+func AddToLog(messages ...any) {
 	_, log := pathToLog()
 
 	file, err := os.OpenFile(log, os.O_APPEND|os.O_WRONLY, 0644)
@@ -15,7 +15,7 @@ func AddToLog(message any) {
 	}
 	defer file.Close()
 
-	_, err = file.WriteString(fmt.Sprintln(message))
+	_, err = file.WriteString(fmt.Sprintln(messages...))
 	if err != nil {
 		panic(err)
 	}
