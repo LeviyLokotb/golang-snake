@@ -8,14 +8,10 @@ import (
 	"strings"
 )
 
-type TerminalRenderer struct {
-	Term *terminal.Terminal
-}
+type TerminalRenderer struct{}
 
-func NewTerminalRenderer(t *terminal.Terminal) *TerminalRenderer {
-	return &TerminalRenderer{
-		Term: t,
-	}
+func NewTerminalRenderer() *TerminalRenderer {
+	return &TerminalRenderer{}
 }
 
 func (tr TerminalRenderer) RenderGame(state game.GameState) error {

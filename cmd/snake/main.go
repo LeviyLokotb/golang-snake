@@ -29,10 +29,10 @@ func main() {
 		conf = config.NewDefaultConfig()
 	}
 
+	// Объект, отвечающий за рендер графики
+	renderer := render.NewTerminalRenderer()
 	// Объект, отвечающий за контроль терминала
 	term := terminal.CurrentTerminal()
-	// Объект, отвечающий за рендер графики
-	renderer := render.NewTerminalRenderer(term)
 	// Объект, отвечающий за отслеживание ввода
 	ih := input.NewInputHandler(term)
 

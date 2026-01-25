@@ -5,7 +5,7 @@ import (
 	"snake-game/internal/models"
 )
 
-func UpdateGame(state *GameState) error {
+func updateGameState(state *GameState) error {
 
 	if state.GameOver {
 		return nil

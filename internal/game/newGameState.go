@@ -6,7 +6,7 @@ import (
 	"snake-game/internal/models"
 )
 
-func NewGame(config config.GameConfig) (GameState, error) {
+func newGameState(config config.GameConfig) (GameState, error) {
 	snake, errSnake := spawnSnake(config)
 	if errSnake != nil {
 		return GameState{}, errSnake

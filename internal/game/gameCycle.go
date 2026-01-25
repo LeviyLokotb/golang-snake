@@ -10,10 +10,19 @@ type Renderer interface {
 	RenderGame(GameState) error
 }
 
+type InputHandler interface {
+	Start()
+	Direction() <-chan input.Direction
+	Pause() <-chan bool
+	Restart() <-chan bool
+	Quit() <-chan bool
+	Stop()
+}
+
 type Game struct {
 	state          *GameState
 	renderer       Renderer
-	inputHandler   *input.InputHandler
+	inputHandler   InputHandler
 	gamePaused     bool
 	gameStop       bool
 	StopGameSignal chan bool
@@ -29,7 +38,7 @@ func (game *Game) GameStop() <-chan bool {
 }
 
 func StartGame(config config.GameConfig, renderer Renderer, inputHandler *input.InputHandler) (*Game, error) {
-	state, err := NewGame(config)
+	state, err := newGameState(config)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +69,7 @@ func StartGame(config config.GameConfig, renderer Renderer, inputHandler *input.
 				game.gamePaused = !game.gamePaused
 
 			case <-game.inputHandler.Restart():
-				new_state, err := NewGame(config)
+				new_state, err := newGameState(config)
 				if err != nil {
 					break MainCycle
 				}
@@ -70,7 +79,7 @@ func StartGame(config config.GameConfig, renderer Renderer, inputHandler *input.
 				game.state.Snake.SwitchDirection(dir)
 
 				if !game.gamePaused {
-					err := UpdateGame(game.state)
+					err := updateGameState(game.state)
 					if err != nil {
 						break MainCycle
 					}
@@ -79,7 +88,7 @@ func StartGame(config config.GameConfig, renderer Renderer, inputHandler *input.
 
 			default:
 				if !game.gamePaused {
-					err := UpdateGame(game.state)
+					err := updateGameState(game.state)
 					if err != nil {
 						break MainCycle
 					}
