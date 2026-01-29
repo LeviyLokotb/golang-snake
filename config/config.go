@@ -20,4 +20,7 @@ type GameConfig struct {
 		Food      string `json:"food"`
 		Border    string `json:"border"`
 	} `json:"colors"`
+	Render struct {
+		PulsarMode bool `json:"pulsarMode"`
+	} `json:"render"`
 }

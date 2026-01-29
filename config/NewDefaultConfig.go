@@ -6,12 +6,6 @@ func NewDefaultConfig() *GameConfig {
 		Heigth:          20,
 		Delay:           400,
 		InitSnakeLength: 3,
-		// Textures: map[string]string{
-		// 	"border":     "▩",
-		// 	"snake_head": "✬",
-		// 	"snake_tail": "❈",
-		// 	"food":       "❄",
-		// },
 		Textures: struct {
 			SnakeHead  string `json:"snakeHead"`
 			SnakeBody  string `json:"snakeBody"`
@@ -39,6 +33,11 @@ func NewDefaultConfig() *GameConfig {
 			SnakeTail: "YELLOW",
 			Food:      "CYAN",
 			Border:    "BOLD+MAGENTA",
+		},
+		Render: struct {
+			PulsarMode bool `json:"pulsarMode"`
+		}{
+			PulsarMode: false,
 		},
 	}
 }

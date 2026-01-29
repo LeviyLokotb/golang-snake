@@ -5,15 +5,12 @@ import (
 	"snake-game/internal/game"
 )
 
-func drawScore(screen *[][]string, state game.GameState) bool {
+func (tr *TerminalRenderer) drawScore(state game.GameState) bool {
 	score := fmt.Sprint(state.Score)
 
-	foodTexture, ok := randomizeTexture(state.Config.Textures.Food)
-	if !ok {
-		return false
-	}
+	foodTexture := tr.getTexture(state.Config.Textures.Food, tr.foodTexture[0])
 
 	text := "Score: " + score + " " + foodTexture
 
-	return drawText(screen, text, -1, -2)
+	return tr.drawText(text, -1, -2)
 }

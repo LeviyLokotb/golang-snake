@@ -5,16 +5,15 @@ import (
 	"snake-game/pkg/terminal"
 )
 
-func drawFood(screen *[][]string, state game.GameState) bool {
+func (tr *TerminalRenderer) drawFood(state game.GameState) bool {
 	food := state.Food
 	x, y := food.Position.X, food.Position.Y
 
-	texture, ok := randomizeTexture(state.Config.Textures.Food)
-	if !ok {
-		return false
-	}
+	currentFoodTexture := tr.foodTexture[state.Score]
+
+	texture := tr.getTexture(state.Config.Textures.Food, currentFoodTexture)
 
 	texture = terminal.WrapTextWithStyle(texture, state.Config.Colors.Food)
 
-	return drawPixel(screen, x, y, texture)
+	return tr.drawPixel(x, y, texture)
 }

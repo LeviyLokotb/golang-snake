@@ -69,11 +69,12 @@ func StartGame(config config.GameConfig, renderer Renderer, inputHandler *input.
 				game.gamePaused = !game.gamePaused
 
 			case <-game.inputHandler.Restart():
-				new_state, err := newGameState(config)
+				newState, err := newGameState(config)
 				if err != nil {
 					break MainCycle
 				}
-				game.state = &new_state
+
+				game.state = &newState
 
 			case dir := <-game.inputHandler.Direction():
 				game.state.Snake.SwitchDirection(dir)

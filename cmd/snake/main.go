@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Объект, отвечающий за рендер графики
-	renderer := render.NewTerminalRenderer()
+	renderer := render.NewTerminalRenderer(*conf)
 	// Объект, отвечающий за контроль терминала
 	term := terminal.CurrentTerminal()
 	// Объект, отвечающий за отслеживание ввода

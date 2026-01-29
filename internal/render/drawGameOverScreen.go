@@ -4,7 +4,7 @@ import (
 	"snake-game/internal/game"
 )
 
-func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
+func (tr *TerminalRenderer) drawGameOverScreen(state game.GameState) bool {
 	message := "Game Over!"
 
 	scoreToWin := state.Config.Width*state.Config.Heigth - state.Config.InitSnakeLength
@@ -13,10 +13,10 @@ func drawGameOverScreen(screen *[][]string, state game.GameState) bool {
 		message = "You Win!"
 	}
 
-	return drawCenterMessage(message, screen, state)
+	return tr.drawCenterMessage(message, state)
 }
 
-func drawCenterMessage(message string, screen *[][]string, state game.GameState) bool {
+func (tr *TerminalRenderer) drawCenterMessage(message string, state game.GameState) bool {
 	W := state.Config.Width
 
 	backgroundLenth := len(state.Config.Textures.Background)
@@ -30,5 +30,5 @@ func drawCenterMessage(message string, screen *[][]string, state game.GameState)
 	H := state.Config.Heigth
 	centerHeigth := H / 2
 
-	return drawText(screen, message, indexStart, centerHeigth)
+	return tr.drawText(message, indexStart, centerHeigth)
 }

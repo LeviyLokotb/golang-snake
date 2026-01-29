@@ -6,7 +6,7 @@ import (
 	"snake-game/pkg/terminal"
 )
 
-func drawBorders(screen *[][]string, state game.GameState) bool {
+func (tr *TerminalRenderer) drawBorders(state game.GameState) bool {
 	W, H := state.Config.Width, state.Config.Heigth
 
 	var plan []models.Point
@@ -22,17 +22,14 @@ func drawBorders(screen *[][]string, state game.GameState) bool {
 	}
 
 	OK := true
-	for _, point := range plan {
+	for i, point := range plan {
 		x, y := point.X, point.Y
 
-		texture, ok := randomizeTexture(state.Config.Textures.Border)
-		if !ok {
-			OK = false
-		}
+		texture := tr.getTexture(state.Config.Textures.Border, tr.borderTexture[i])
 
 		texture = terminal.WrapTextWithStyle(texture, state.Config.Colors.Border)
 
-		OK = OK && drawPixel(screen, x, y, texture)
+		OK = OK && tr.drawPixel(x, y, texture)
 	}
 
 	return OK

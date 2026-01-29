@@ -4,15 +4,15 @@ import (
 	"math/rand"
 )
 
-func drawPixel(screen *[][]string, x, y int, texture string) bool {
+func (tr *TerminalRenderer) drawPixel(x, y int, texture string) bool {
 
 	if x < -1 || y < -2 ||
-		y+2 >= len((*screen)) ||
-		x+1 >= len((*screen)[y+2]) {
+		y+2 >= len((*tr.screen)) ||
+		x+1 >= len((*tr.screen)[y+2]) {
 		return false
 	}
 
-	(*screen)[y+2][x+1] = texture
+	(*tr.screen)[y+2][x+1] = texture
 	return true
 }
 
@@ -33,18 +33,27 @@ func randomizeTexture(texture string) (string, bool) {
 	return texture, true
 }
 
-func drawText(screen *[][]string, message string, WStart, H int) bool {
-	// debug_tools.AddToLog(fmt.Sprint(WStart, " | ", H))
+func (tr *TerminalRenderer) getTexture(configTexture, defaultTexture string) string {
+	if tr.pulsarMode {
+		textture, ok := randomizeTexture(configTexture)
+		if !ok {
+			return "?"
+		}
+		return textture
+	}
+	return defaultTexture
+}
+
+func (tr *TerminalRenderer) drawText(message string, WStart, H int) bool {
 	texture := ""
 	CurrCellInc := 0
 	for _, let := range message {
-		// debug_tools.AddToLog(fmt.Sprint(WStart+CurrCellInc, " | ", len((*screen)[H+1])))
 		if let == '\n' {
 			if let != '\n' {
 				texture += string(let)
 			}
 			if texture != "" {
-				if !drawPixel(screen, WStart+CurrCellInc, H, texture) {
+				if !tr.drawPixel(WStart+CurrCellInc, H, texture) {
 					return false
 				}
 			}
@@ -54,19 +63,19 @@ func drawText(screen *[][]string, message string, WStart, H int) bool {
 			continue
 		}
 
-		if WStart+CurrCellInc+1 >= len((*screen)[H+2]) {
+		if WStart+CurrCellInc+1 >= len((*tr.screen)[H+2]) {
 			continue
 		}
 
 		//debug_tools.AddToLog(H)
-		cellLen := len((*screen)[H+2][WStart+CurrCellInc+1])
+		cellLen := len((*tr.screen)[H+2][WStart+CurrCellInc+1])
 
 		texture += string(let)
 		if len(texture) < cellLen {
 			continue
 		}
 
-		if !drawPixel(screen, WStart+CurrCellInc, H, texture) {
+		if !tr.drawPixel(WStart+CurrCellInc, H, texture) {
 			return false
 		}
 		CurrCellInc++
@@ -74,7 +83,7 @@ func drawText(screen *[][]string, message string, WStart, H int) bool {
 	}
 
 	if texture != "" {
-		if !drawPixel(screen, WStart+CurrCellInc, H, texture) {
+		if !tr.drawPixel(WStart+CurrCellInc, H, texture) {
 			return false
 		}
 	}

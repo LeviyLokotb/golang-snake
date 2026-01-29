@@ -17,5 +17,8 @@
         "snakeTail": "YELLOW",
         "food": "CYAN",
         "border": "BOLD+MAGENTA"
+    },
+    "render": {
+        "pulsarMode": false
     }
 }
